@@ -36,4 +36,4 @@ Si quieres contribuir a Promptopia, ¡estamos felices de recibir pull requests! 
 
 ## Equipo
 
-- [Agustín Vega](https://github.com/nombre-del-desarrollador)
+- [Agustín Vega](https://github.com/aguvdev)
