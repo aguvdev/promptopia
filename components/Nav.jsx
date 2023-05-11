@@ -7,7 +7,7 @@ import { signIn, signOut, useSession, getProviders } from "next-auth/react";
 
 const Nav = () => {
   // Comprobar si el usuario ha iniciado sesión
-  const isUserLoggedIn = true;
+  const { data: session } = useSession();
 
   // Estado para almacenar los proveedores de autenticación
   const [providers, setProviders] = useState(null);
@@ -15,13 +15,13 @@ const Nav = () => {
 
   // Llamada a la API de NextAuth para obtener la lista de proveedores
   useEffect(() => {
-    const setProviders = async () => {
+    const setUpProviders = async () => {
       const response = await getProviders();
 
       setProviders(response);
     };
 
-    setProviders();
+    setUpProviders();
   }, []);
 
   return (
@@ -41,7 +41,7 @@ const Nav = () => {
 
       {/* Navegación para desktop */}
       <div className="sm:flex hidden">
-        {isUserLoggedIn ? (
+        {session?.user ? (
           // Si el usuario ha iniciado sesión, mostrar estos botones
           <div className="flex gap-3 md:gap-5">
             <Link href="/create-prompt" className="black_btn">
@@ -54,10 +54,11 @@ const Nav = () => {
 
             <Link href="/profile">
               <Image
-                src="/assets/images/logo.svg"
+                src={session?.user.image}
                 alt="profile image"
                 width={37}
                 height={37}
+                className="rounded-full"
               />
             </Link>
           </div>
@@ -65,7 +66,7 @@ const Nav = () => {
           // Si el usuario no ha iniciado sesión, mostrar estos botones de inicio de sesión
           <>
             {providers &&
-              Object.values(providers).map((provider) => {
+              Object.values(providers).map((provider) => (
                 <button
                   type="button"
                   key={provider.name}
@@ -73,18 +74,18 @@ const Nav = () => {
                   className="black_btn"
                 >
                   Sign In
-                </button>;
-              })}
+                </button>
+              ))}
           </>
         )}
       </div>
 
       {/* Navegación para móvil */}
       <div className="sm:hidden flex relative">
-        {isUserLoggedIn ? (
+        {session?.user ? (
           <div className="flex">
             <Image
-              src="/assets/images/logo.svg"
+              src={session?.user.image}
               width={37}
               height={37}
               className="rounded-full"
@@ -124,7 +125,7 @@ const Nav = () => {
         ) : (
           <>
             {providers &&
-              Object.values(providers).map((provider) => {
+              Object.values(providers).map((provider) => (
                 <button
                   type="button"
                   key={provider.name}
@@ -132,8 +133,8 @@ const Nav = () => {
                   className="black_btn"
                 >
                   Sign In
-                </button>;
-              })}
+                </button>
+              ))}
           </>
         )}
       </div>
