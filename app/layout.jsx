@@ -18,17 +18,19 @@ const RootLayout = ({ children }) => {
   return (
     <html lang="en"> {/* Agregar lenguaje de la página */}
       <body>
-        <div className="main"> {/* Crear contenedor principal */}
-          <div className="gradient" /> {/* Crear gradiente de fondo */}
-        </div>
+        <Provider>
+          <div className="main"> {/* Crear contenedor principal */}
+            <div className="gradient" /> {/* Crear gradiente de fondo */}
+          </div>
 
-        {/* Crear contenedor de la aplicación */}
-        <main className="app"> 
-          {/* Agregar componente Nav */}
-          <Nav />
-          {/* Mostrar contenido hijo */}
-          {children}
-        </main>
+          {/* Crear contenedor de la aplicación */}
+          <main className="app"> 
+            {/* Agregar componente Nav */}
+            <Nav />
+            {/* Mostrar contenido hijo */}
+            {children}
+          </main>
+        </Provider>
       </body>
     </html>
   );
