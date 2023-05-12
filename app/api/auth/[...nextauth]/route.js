@@ -1,13 +1,14 @@
+// Importamos el paquete NextAuth para manejar la autenticación
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
+// Importamos el proveedor de autenticación de Google
 import User from '@models/user';
+// Importamos el modelo de usuario (User) y la función de conexión a la base de datos (connectToDB) desde sus respectivos archivos
 import { connectToDB } from '@utils/database';
 
-// Importamos el paquete NextAuth para manejar la autenticación
-// Importamos el proveedor de autenticación de Google
-// Importamos el modelo de usuario (User) y la función de conexión a la base de datos (connectToDB) desde sus respectivos archivos
 
+// Configuramos los proveedores de autenticación disponibles, en este caso solo el proveedor de Google con su clientId y clientSecret
 const handler = NextAuth({
   providers: [
     GoogleProvider({
@@ -16,29 +17,28 @@ const handler = NextAuth({
     })
   ],
   callbacks: {
-    // Configuramos los proveedores de autenticación disponibles, en este caso solo el proveedor de Google con su clientId y clientSecret
 
+  // Obtenemos la sesión del usuario y buscamos en la base de datos el usuario correspondiente al email de la sesión
   async session({ session }) {
     const sessionUser = await User.findOne({
       email: session.user.email
     })
 
-    // Obtenemos la sesión del usuario y buscamos en la base de datos el usuario correspondiente al email de la sesión
-
-    session.user.id = sessionUser._id.toString();
 
     // Asignamos el ID del usuario a la sesión
+    session.user.id = sessionUser._id.toString();
 
+
+    // Configuramos la función session, que se ejecuta cada vez que se crea o actualiza una sesión de usuario
     return session;
   },
 
-  // Configuramos la función session, que se ejecuta cada vez que se crea o actualiza una sesión de usuario
 
   async signIn({ profile }) {
     try {
+      // Conectamos a la base de datos
       await connectToDB();
 
-      // Conectamos a la base de datos
 
       // Verificamos si ya existe un usuario con el mismo email en la base de datos
       const userExists = await User.findOne({
